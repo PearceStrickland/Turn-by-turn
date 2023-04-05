@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../helpers/shared_prefs.dart';
 import '../screens/turn_by_turn.dart';
 
 Widget reviewRideBottomSheet(
     BuildContext context, String distance, String dropOffTime) {
-  // Get source and destination addresses from sharedPreferences
+  String sourceAddress = getSourceAndDestinationPlaceText('source');
+  String destinationAddress = getSourceAndDestinationPlaceText('destination');
 
   return Positioned(
     bottom: 0,
@@ -18,7 +20,7 @@ Widget reviewRideBottomSheet(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Source Address ➡ Destination Address',
+                Text('$sourceAddress ➡ $destinationAddress',
                     style: Theme.of(context)
                         .textTheme
                         .titleMedium
@@ -31,13 +33,10 @@ Widget reviewRideBottomSheet(
                         image: AssetImage('assets/image/sport-car.png'),
                         height: 50,
                         width: 50),
-                    title: const Text('Premier',
+                    title: const Text('Driving',
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold)),
-                    subtitle: Text('$distance km, $dropOffTime drop off'),
-                    trailing: const Text('\$384.22',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18)),
+                    subtitle: Text('$distance km, $dropOffTime Arrival'),
                   ),
                 ),
                 ElevatedButton(
@@ -48,7 +47,7 @@ Widget reviewRideBottomSheet(
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
-                          Text('Start your premier ride now'),
+                          Text('Start your ride now'),
                         ])),
               ]),
         ),

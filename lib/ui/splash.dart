@@ -63,7 +63,7 @@ class _SplashState extends State<Splash> {
             size: 120,
           ),
           Text(
-            'Mapbox Cabs',
+            'Car AR',
             style: Theme.of(context)
                 .textTheme
                 .headlineLarge

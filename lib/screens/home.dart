@@ -16,12 +16,17 @@ class _HomeState extends State<Home> {
   late String currentAddress;
   late CameraPosition _initialCameraPosition;
 
+  //_currAdress(LatLng value) async {
+  //return await getParsedReverseGeocoding(currentLocation);
+  //}
+
   @override
   void initState() {
     super.initState();
     // Set initial camera position and current address
     _initialCameraPosition = CameraPosition(target: currentLocation, zoom: 14);
-    //currentAddress = getCurrentAddressFromSharedPrefs();
+    //var currentAddress = await _currAdress(currentLocation);
+    //print(currentAddress);
   }
 
   @override
@@ -53,7 +58,7 @@ class _HomeState extends State<Home> {
                       ),
                       const SizedBox(height: 20),
                       const Text('You are currently here:'),
-                      const Text('<Show the current address here>',
+                      const Text('Cupertino California',
                           style: TextStyle(color: Colors.indigo)),
                       const SizedBox(height: 20),
                       ElevatedButton(

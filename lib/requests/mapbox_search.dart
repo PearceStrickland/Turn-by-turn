@@ -22,7 +22,6 @@ Future getSearchResultsFromQueryUsingMapbox(String query) async {
   try {
     _dio.options.contentType = Headers.jsonContentType;
     final responseData = await _dio.get(url);
-    print("check3");
     return responseData.data;
   } catch (e) {
     final errorMessage = DioExceptions.fromDioError(e as DioError).toString();
