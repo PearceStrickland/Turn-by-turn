@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:mapbox_turn_by_turn/screens/homescreen.dart';
 
 import '../helpers/mapbox_handler.dart';
 import '../main.dart';
@@ -46,8 +47,10 @@ class _SplashState extends State<Splash> {
     sharedPreferences.setDouble('latitude', _locationData.latitude!);
     sharedPreferences.setDouble('longitude', _locationData.longitude!);
 
-    Navigator.pushAndRemoveUntil(context,
-        MaterialPageRoute(builder: (_) => const Home()), (route) => false);
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
+        (route) => false);
   }
 
   @override

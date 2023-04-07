@@ -58,7 +58,7 @@ class _HomeState extends State<Home> {
                       ),
                       const SizedBox(height: 20),
                       const Text('You are currently here:'),
-                      const Text('Cupertino California',
+                      const Text('Atlanta, Georgia',
                           style: TextStyle(color: Colors.indigo)),
                       const SizedBox(height: 20),
                       ElevatedButton(
