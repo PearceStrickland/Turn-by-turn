@@ -4,14 +4,14 @@ import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:mapbox_turn_by_turn/helpers/shared_prefs.dart';
 import 'package:mapbox_turn_by_turn/screens/prepare_ride.dart';
 
-class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+class NavHome extends StatefulWidget {
+  const NavHome({Key? key}) : super(key: key);
 
   @override
-  State<Home> createState() => _HomeState();
+  State<NavHome> createState() => _NavHomeState();
 }
 
-class _HomeState extends State<Home> {
+class _NavHomeState extends State<NavHome> {
   LatLng currentLocation = getCurrentLatLngFromSharedPrefs();
   late String currentAddress;
   late CameraPosition _initialCameraPosition;

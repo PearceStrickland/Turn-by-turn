@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-import '../screens/home.dart';
+import '../screens/navhome.dart';
 
 class RateRide extends StatelessWidget {
   const RateRide({Key? key}) : super(key: key);
@@ -18,7 +18,7 @@ class RateRide extends StatelessWidget {
       ),
       ElevatedButton(
           onPressed: () => Navigator.push(
-              context, MaterialPageRoute(builder: (_) => const Home())),
+              context, MaterialPageRoute(builder: (_) => const NavHome())),
           child: const Text('Start another ride'))
     ]));
   }

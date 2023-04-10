@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mapbox_turn_by_turn/screens/bluetooth.dart';
-import 'package:mapbox_turn_by_turn/screens/home.dart';
+import 'package:mapbox_turn_by_turn/screens/navhome.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -27,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(height: 16),
             ElevatedButton(
               onPressed: () => Navigator.push(
-                  context, MaterialPageRoute(builder: (_) => const Home())),
+                  context, MaterialPageRoute(builder: (_) => const NavHome())),
               child: Text('Navigation'),
             ),
             SizedBox(height: 16),
