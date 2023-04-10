@@ -6,7 +6,7 @@ import 'package:mapbox_turn_by_turn/screens/homescreen.dart';
 
 import '../helpers/mapbox_handler.dart';
 import '../main.dart';
-import '../screens/home.dart';
+import '../screens/navhome.dart';
 
 class Splash extends StatefulWidget {
   const Splash({Key? key}) : super(key: key);
