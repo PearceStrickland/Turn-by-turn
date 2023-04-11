@@ -3,6 +3,10 @@ import 'package:flutter_mapbox_navigation/library.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:mapbox_turn_by_turn/helpers/shared_prefs.dart';
 import 'package:mapbox_turn_by_turn/ui/rate_ride.dart';
+import 'package:mapbox_turn_by_turn/screens/bluetooth.dart';
+import 'package:flutter_blue/flutter_blue.dart';
+import 'package:mapbox_turn_by_turn/widget.dart';
+import 'dart:convert';
 
 class TurnByTurn extends StatefulWidget {
   const TurnByTurn({Key? key}) : super(key: key);
@@ -69,9 +73,15 @@ class _TurnByTurnState extends State<TurnByTurn> {
     return const RateRide();
   }
 
+  Future<void> checker() async {
+    await theUUID.write(utf8.encode("on"));
+    await theUUID.write(utf8.encode("off"));
+  }
+
   Future<void> _onRouteEvent(e) async {
     distanceRemaining = await directions.distanceRemaining;
     durationRemaining = await directions.durationRemaining;
+    checker();
 
     switch (e.eventType) {
       case MapBoxEvent.progress_change:

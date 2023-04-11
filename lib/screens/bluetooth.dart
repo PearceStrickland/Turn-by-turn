@@ -1,9 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:mapbox_turn_by_turn/widget.dart';
+
+var theUUID;
+var count = 0;
 
 class Bluetooth extends StatefulWidget {
   const Bluetooth({Key? key}) : super(key: key);
@@ -85,53 +89,44 @@ class FindDevicesScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              StreamBuilder<List<BluetoothDevice>>(
-                stream: Stream.periodic(Duration(seconds: 2))
-                    .asyncMap((_) => FlutterBlue.instance.connectedDevices),
-                initialData: [],
-                builder: (c, snapshot) => Column(
-                  children: snapshot.data!
-                      .map((d) => ListTile(
-                            title: Text(d.name),
-                            subtitle: Text(d.id.toString()),
-                            trailing: StreamBuilder<BluetoothDeviceState>(
-                              stream: d.state,
-                              initialData: BluetoothDeviceState.disconnected,
-                              builder: (c, snapshot) {
-                                if (snapshot.data ==
-                                    BluetoothDeviceState.connected) {
-                                  return ElevatedButton(
-                                    child: Text('OPEN'),
-                                    onPressed: () => Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                DeviceScreen(device: d))),
-                                  );
-                                }
-                                return Text(snapshot.data.toString());
-                              },
-                            ),
-                          ))
-                      .toList(),
-                ),
-              ),
               StreamBuilder<List<ScanResult>>(
                 stream: FlutterBlue.instance.scanResults,
                 initialData: [],
-                builder: (c, snapshot) => Column(
-                  children: snapshot.data!
-                      .map(
-                        (r) => ScanResultTile(
-                          result: r,
-                          onTap: () => Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (context) {
-                            r.device.connect();
-                            return DeviceScreen(device: r.device);
-                          })),
-                        ),
-                      )
-                      .toList(),
-                ),
+                builder: (context, snapshot) {
+                  // Check if the stream has data
+                  if (snapshot.hasData) {
+                    // Get the list of ScanResults from the snapshot
+                    List<ScanResult> scanResults = snapshot.data!;
+
+                    // Sort the list alphabetically by title
+                    scanResults.sort((a, b) => a.device.name
+                        .toLowerCase()
+                        .compareTo((b.device.name.toLowerCase())));
+
+                    // Create a list of ListTiles sorted by title
+                    List<Widget> sortedListTiles = scanResults
+                        .map((result) => ListTile(
+                              title: Text(result.device.name == ""
+                                  ? "No Name "
+                                  : result.device.name),
+                              subtitle: Text(result.device.id.toString()),
+                              onTap: () => Navigator.of(context)
+                                  .push(MaterialPageRoute(builder: (context) {
+                                result.device.connect();
+                                return DeviceScreen(device: result.device);
+                              })),
+                            ))
+                        .toList();
+
+                    // Return the sortedListTiles wrapped in a Column widget
+                    return Column(
+                      children: sortedListTiles,
+                    );
+                  } else {
+                    // Return a placeholder widget when there is no data in the stream
+                    return Container();
+                  }
+                },
               ),
             ],
           ),
@@ -185,10 +180,19 @@ class DeviceScreen extends StatelessWidget {
                     characteristic: c,
                     onReadPressed: () => c.read(),
                     onWritePressed: () async {
-                      await c.write(_getRandomBytes(), withoutResponse: true);
+                      print("write check");
+                      if (c.uuid.toString() ==
+                          "3b802c61-3308-476b-bef4-6a1ca763d842") {
+                        theUUID = c;
+                        print("nice");
+                      }
+
+                      await c.write(utf8.encode("on"));
                       await c.read();
                     },
                     onNotificationPressed: () async {
+                      print("noty check");
+                      await c.write(utf8.encode("off"));
                       await c.setNotifyValue(!c.isNotifying);
                       await c.read();
                     },

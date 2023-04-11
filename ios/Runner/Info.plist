@@ -32,14 +32,14 @@
 	<string>pk.eyJ1IjoicHN0cmlja2xhbmQ3IiwiYSI6ImNsZW96ZTZraTA3OWwzcXBuam45bjY2aGMifQ.2AJp82uwI9BmP4tJqNBgEQ</string>
 	<key>MGLMapboxMetricsEnabledSettingShownInApp</key>
 	<string>YES</string>
-	<key>NSBluetoothAlwaysUsageDescription</key>  
-	<string>Need BLE permission</string>  
-	<key>NSBluetoothPeripheralUsageDescription</key>  
-	<string>Need BLE permission</string>  
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>  
-	<string>Need Location permission</string>  
-	<key>NSLocationAlwaysUsageDescription</key>  
-	<string>Need Location permission</string>  
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Need BLE permission</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Need BLE permission</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Need Location permission</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Need Location permission</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Shows your location on the map and helps improve the map</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
