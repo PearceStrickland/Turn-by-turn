@@ -7,6 +7,7 @@ import 'package:flutter_blue/flutter_blue.dart';
 import 'package:mapbox_turn_by_turn/widget.dart';
 
 var theUUID;
+var theUUID2;
 var count = 0;
 
 class Bluetooth extends StatefulWidget {
@@ -184,6 +185,11 @@ class DeviceScreen extends StatelessWidget {
                       if (c.uuid.toString() ==
                           "3b802c61-3308-476b-bef4-6a1ca763d842") {
                         theUUID = c;
+                        print("nice");
+                      }
+                      if (c.uuid.toString() ==
+                          "00802c61-3308-476b-bef4-6a1ca763d842") {
+                        theUUID2 = c;
                         print("nice");
                       }
 
