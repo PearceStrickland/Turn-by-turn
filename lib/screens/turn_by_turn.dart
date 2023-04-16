@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+import 'dart:io' as io;
 import 'package:flutter/material.dart';
 import 'package:flutter_mapbox_navigation/library.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
@@ -7,6 +9,10 @@ import 'package:mapbox_turn_by_turn/screens/bluetooth.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:mapbox_turn_by_turn/widget.dart';
 import 'dart:convert';
+import 'package:screenshot/screenshot.dart';
+import 'package:path_provider/path_provider.dart';
+
+ScreenshotController screenshotController = ScreenshotController();
 
 var index = 0;
 var test;
@@ -78,9 +84,23 @@ class _TurnByTurnState extends State<TurnByTurn> {
   }
 
   Future<void> checker() async {
-    await theUUID.write(utf8.encode("on"));
-    await theUUID.write(utf8.encode("off"));
-    await theUUID2.write(utf8.encode(test));
+    screenshotController
+        .captureFromWidget(
+            Container(child: Text("This is an invisible widget")))
+        .then((Uint8List capturedImage) async {
+      // Save the captured image to local storage
+      String fileName = 'captured_image.png'; // Set desired file name
+      io.Directory appDocDir = await getApplicationDocumentsDirectory();
+      String appDocPath = appDocDir.path;
+      String imagePath = '$appDocPath/$fileName';
+      io.File imageFile = io.File(imagePath);
+      await imageFile.writeAsBytes(capturedImage);
+
+      print('Image saved at $imagePath');
+    });
+    //await theUUID.write(utf8.encode("on"));
+    //await theUUID.write(utf8.encode("off"));
+    //await theUUID2.write(utf8.encode(test));
   }
 
   Future<void> _onRouteEvent(e) async {
