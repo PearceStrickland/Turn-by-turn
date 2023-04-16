@@ -3,10 +3,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:mapbox_turn_by_turn/helpers/shared_prefs.dart';
 import 'package:mapbox_turn_by_turn/screens/prepare_ride.dart';
+import 'package:mapbox_turn_by_turn/screens/bluetooth.dart';
 
 class NavHome extends StatefulWidget {
   const NavHome({Key? key}) : super(key: key);
-
   @override
   State<NavHome> createState() => _NavHomeState();
 }
@@ -23,6 +23,7 @@ class _NavHomeState extends State<NavHome> {
   @override
   void initState() {
     super.initState();
+    //print(firstval);
     // Set initial camera position and current address
     _initialCameraPosition = CameraPosition(target: currentLocation, zoom: 14);
     //var currentAddress = await _currAdress(currentLocation);

@@ -9,6 +9,8 @@ PODS:
   - flutter_mapbox_navigation (0.0.20):
     - Flutter
     - MapboxNavigation (~> 1.4)
+  - flutter_native_screenshot (0.0.1):
+    - Flutter
   - flutter_native_splash (0.0.1):
     - Flutter
   - location (0.0.1):
@@ -57,6 +59,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_blue (from `.symlinks/plugins/flutter_blue/ios`)
   - flutter_mapbox_navigation (from `.symlinks/plugins/flutter_mapbox_navigation/ios`)
+  - flutter_native_screenshot (from `.symlinks/plugins/flutter_native_screenshot/ios`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
   - location (from `.symlinks/plugins/location/ios`)
   - mapbox_gl (from `.symlinks/plugins/mapbox_gl/ios`)
@@ -87,6 +90,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_blue/ios"
   flutter_mapbox_navigation:
     :path: ".symlinks/plugins/flutter_mapbox_navigation/ios"
+  flutter_native_screenshot:
+    :path: ".symlinks/plugins/flutter_native_screenshot/ios"
   flutter_native_splash:
     :path: ".symlinks/plugins/flutter_native_splash/ios"
   location:
@@ -102,6 +107,7 @@ SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_blue: eeb381dc4727a0954dede73515f683865494b370
   flutter_mapbox_navigation: b2d023f58478f5f80242db9b70cc75ee37f42e20
+  flutter_native_screenshot: 9f85755d0bcc31a774aaa45c0bc3fada210f001a
   flutter_native_splash: 52501b97d1c0a5f898d687f1646226c1f93c56ef
   location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
   Mapbox-iOS-SDK: f870f83cbdc7aa4a74afcee143aafb0dae390c82

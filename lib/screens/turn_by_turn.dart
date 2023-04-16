@@ -11,6 +11,8 @@ import 'package:mapbox_turn_by_turn/widget.dart';
 import 'dart:convert';
 import 'package:screenshot/screenshot.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter_native_screenshot/flutter_native_screenshot.dart';
+import 'package:image/image.dart' as img;
 
 ScreenshotController screenshotController = ScreenshotController();
 
@@ -83,21 +85,27 @@ class _TurnByTurnState extends State<TurnByTurn> {
     return const RateRide();
   }
 
-  Future<void> checker() async {
-    screenshotController
-        .captureFromWidget(
-            Container(child: Text("This is an invisible widget")))
-        .then((Uint8List capturedImage) async {
-      // Save the captured image to local storage
-      String fileName = 'captured_image.png'; // Set desired file name
-      io.Directory appDocDir = await getApplicationDocumentsDirectory();
-      String appDocPath = appDocDir.path;
-      String imagePath = '$appDocPath/$fileName';
-      io.File imageFile = io.File(imagePath);
-      await imageFile.writeAsBytes(capturedImage);
+  Future<void> checker(String? nav_data) async {
+    if (nav_data != null) {
+      // Capture the image of the entire screen
+      screenshotController
+          .captureFromWidget(Container(child: Text(nav_data)))
+          .then((Uint8List capturedImage) async {
+        // Save the captured image to local storage
+        String fileName = 'captured_image.png'; // Set desired file name
+        io.Directory appDocDir =
+            await getApplicationDocumentsDirectory(); // Use dart:io.Directory
+        String appDocPath = appDocDir.path;
+        String imagePath = '$appDocPath/$fileName';
+        io.File imageFile = io.File(imagePath);
+        await imageFile.writeAsBytes(capturedImage);
 
-      print('Image saved at $imagePath');
-    });
+        print('Image saved at $imagePath');
+      });
+      //await theUUID.write(utf8.encode("on"));
+      //await theUUID.write(utf8.encode("off"));
+      //await theUUID2.write(utf8.encode(test));
+    }
     //await theUUID.write(utf8.encode("on"));
     //await theUUID.write(utf8.encode("off"));
     //await theUUID2.write(utf8.encode(test));
@@ -107,13 +115,16 @@ class _TurnByTurnState extends State<TurnByTurn> {
     distanceRemaining = await directions.distanceRemaining;
     durationRemaining = await directions.durationRemaining;
 
-    checker();
+    //checker();
 
     switch (e.eventType) {
       case MapBoxEvent.progress_change:
         var progressEvent = e.data as RouteProgressEvent;
         arrived = progressEvent.arrived!;
         test = progressEvent.currentLeg!.steps![index].instructions;
+
+        checker(progressEvent.currentLeg!.steps![index].instructions);
+
         print(progressEvent.currentLeg!.steps![index].instructions);
         if (progressEvent.currentStepInstruction != instruction) {
           index++;

@@ -5,10 +5,13 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:mapbox_turn_by_turn/widget.dart';
+import 'package:mapbox_turn_by_turn/screens/navhome.dart';
 
 var theUUID;
 var theUUID2;
 var count = 0;
+var button_state;
+var theUUID3;
 
 class Bluetooth extends StatefulWidget {
   const Bluetooth({Key? key}) : super(key: key);
@@ -181,15 +184,17 @@ class DeviceScreen extends StatelessWidget {
                     characteristic: c,
                     onReadPressed: () => c.read(),
                     onWritePressed: () async {
-                      print("write check");
                       if (c.uuid.toString() ==
                           "3b802c61-3308-476b-bef4-6a1ca763d842") {
                         theUUID = c;
-                        print("nice");
                       }
                       if (c.uuid.toString() ==
                           "00802c61-3308-476b-bef4-6a1ca763d842") {
                         theUUID2 = c;
+                      }
+                      if (c.uuid.toString() ==
+                          "5A359055-90D5-4E7A-80E3-78740ED594D0") {
+                        theUUID3 = c;
                         print("nice");
                       }
 
@@ -197,9 +202,14 @@ class DeviceScreen extends StatelessWidget {
                       await c.read();
                     },
                     onNotificationPressed: () async {
-                      print("noty check");
-                      await c.write(utf8.encode("off"));
-                      await c.setNotifyValue(!c.isNotifying);
+                      //await c.write(utf8.encode("off"));
+                      await c.setNotifyValue(true);
+                      c.value.listen((value) {
+                        print(value);
+                        print("yoinks");
+                        button_state = value;
+                        // do something with new value
+                      });
                       await c.read();
                     },
                     descriptorTiles: c.descriptors
