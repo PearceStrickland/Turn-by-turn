@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:mapbox_turn_by_turn/widgets/endpoints_card.dart';
 import 'package:mapbox_turn_by_turn/widgets/search_listview.dart';
-
+import 'package:mapbox_turn_by_turn/screens/bluetooth.dart';
 import '../widgets/review_ride_fa_button.dart';
+import 'package:mapbox_turn_by_turn/screens/homescreen.dart';
+
+import 'package:flutter/material.dart';
+import 'package:mapbox_gl/mapbox_gl.dart';
+
+import '../helpers/mapbox_handler.dart';
+import '../helpers/shared_prefs.dart';
+import '../screens/review_ride.dart';
 
 class PrepareRide extends StatefulWidget {
   const PrepareRide({Key? key}) : super(key: key);
@@ -27,6 +35,33 @@ class _PrepareRideState extends State<PrepareRide> {
   List responses = [];
   TextEditingController sourceController = TextEditingController();
   TextEditingController destinationController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+
+    // Perform initialization tasks here, after everything is loaded
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Code to run after everything is loaded goes here
+      // For example, you can call a function or fetch data here
+
+      // Example:
+      checker();
+    });
+  }
+
+  Future<void> checker() async {
+    if (theUUID3 == null) {
+      print('null check');
+    } else {
+      await theUUID3.setNotifyValue(true);
+      theUUID3.value.listen((value) {
+        print(value.toString());
+        if (value.toString() == "[108, 101, 102, 116]") {
+          print("worked");
+        }
+      });
+    }
+  }
 
   // Define setters to be used by children widgets
   set responsesState(List responses) {

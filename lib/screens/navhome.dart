@@ -4,6 +4,9 @@ import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:mapbox_turn_by_turn/helpers/shared_prefs.dart';
 import 'package:mapbox_turn_by_turn/screens/prepare_ride.dart';
 import 'package:mapbox_turn_by_turn/screens/bluetooth.dart';
+import 'package:mapbox_turn_by_turn/screens/homescreen.dart';
+
+var button;
 
 class NavHome extends StatefulWidget {
   const NavHome({Key? key}) : super(key: key);
@@ -15,6 +18,7 @@ class _NavHomeState extends State<NavHome> {
   LatLng currentLocation = getCurrentLatLngFromSharedPrefs();
   late String currentAddress;
   late CameraPosition _initialCameraPosition;
+  HomeScreen _homeScreen = HomeScreen();
 
   //_currAdress(LatLng value) async {
   //return await getParsedReverseGeocoding(currentLocation);
@@ -28,6 +32,33 @@ class _NavHomeState extends State<NavHome> {
     _initialCameraPosition = CameraPosition(target: currentLocation, zoom: 14);
     //var currentAddress = await _currAdress(currentLocation);
     //print(currentAddress);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Code to run after everything is loaded goes here
+      // For example, you can call a function or fetch data here
+      checker();
+      // Example:
+    });
+  }
+
+  Future<void> checker() async {
+    if (theUUID3 == null) {
+      print('null check');
+    } else {
+      await theUUID3.setNotifyValue(true);
+      theUUID3.value.listen((value) {
+        print(value.toString());
+        if (value.toString() == "[108, 101, 102, 116]") {
+          print("worked");
+          Navigator.push(
+              context, MaterialPageRoute(builder: (_) => const PrepareRide()));
+        }
+      });
+    }
+  }
+
+  void handleCheckerCalled() {
+    // Your code logic when checker is called from HomeScreen
+    print("Checker called from NavHome!");
   }
 
   @override
@@ -35,6 +66,9 @@ class _NavHomeState extends State<NavHome> {
     return Scaffold(
       body: Stack(
         children: [
+          HomeScreen(
+            onCheckerCalled: handleCheckerCalled,
+          ),
           MapboxMap(
             accessToken: dotenv.env['MAPBOX_ACCESS_TOKEN'],
             initialCameraPosition: _initialCameraPosition,

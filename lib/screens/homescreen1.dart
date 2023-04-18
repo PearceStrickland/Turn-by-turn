@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'dart:io' as io;
 import 'package:flutter/material.dart';
 import 'package:mapbox_turn_by_turn/screens/bluetooth.dart';
-import 'package:mapbox_turn_by_turn/screens/homescreen1.dart';
 import 'package:mapbox_turn_by_turn/screens/navhome.dart';
 import 'package:mapbox_turn_by_turn/screens/bluetooth.dart';
 import 'package:path_provider/path_provider.dart';
@@ -11,19 +10,14 @@ import 'package:screenshot/screenshot.dart';
 
 ScreenshotController screenshotController = ScreenshotController();
 
-class HomeScreen extends StatefulWidget {
-  final VoidCallback? onCheckerCalled;
-
-  HomeScreen({Key? key, this.onCheckerCalled}) : super(key: key);
+class HomeScreen1 extends StatefulWidget {
+  const HomeScreen1({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomeScreen1> createState() => _HomeScreenState1();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  var navback = Color.fromARGB(255, 0, 4, 254);
-  var spotback = Color.fromARGB(255, 255, 0, 0);
-  var blueback = Color.fromARGB(255, 0, 4, 254);
+class _HomeScreenState1 extends State<HomeScreen1> {
   ScreenshotController screenshotController = ScreenshotController();
 
   @override
@@ -51,57 +45,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> checker() async {
-    if (widget.onCheckerCalled != null) {
-      widget.onCheckerCalled!();
-    }
     if (theUUID3 == null) {
       print('null check');
     } else {
       await theUUID3.setNotifyValue(true);
       theUUID3.value.listen((value) {
-        print(value.toString());
-        if (value.toString() == "[108, 101, 102, 116]" &&
-            navback == Color.fromARGB(255, 255, 0, 0)) {
-          setState(() {
-            navback = Color.fromARGB(255, 0, 4, 254);
-            spotback = Color.fromARGB(255, 255, 0, 0);
-          });
-          Navigator.push(
-              context, MaterialPageRoute(builder: (_) => const NavHome()));
-        } else if (value.toString() == "[108, 101, 102, 116]" &&
-            blueback == Color.fromARGB(255, 255, 0, 0)) {
-          setState(() {
-            blueback = Color.fromARGB(255, 0, 4, 254);
-            spotback = Color.fromARGB(255, 255, 0, 0);
-          });
-          Navigator.push(
-              context, MaterialPageRoute(builder: (_) => Bluetooth()));
-        } else if (value.toString() == "[114, 105, 103, 104, 116]" &&
-            navback == Color.fromARGB(255, 255, 0, 0)) {
-          print("check");
-          setState(() {
-            navback = Color.fromARGB(255, 0, 4, 254);
-            spotback = Color.fromARGB(255, 255, 0, 0);
-          });
-        } else if (value.toString() == "[100, 111, 119, 110]" &&
-            spotback == Color.fromARGB(255, 255, 0, 0)) {
-          setState(() {
-            navback = Color.fromARGB(255, 255, 0, 0);
-            spotback = Color.fromARGB(255, 0, 4, 254);
-          });
-        } else if (value.toString() == "[114, 105, 103, 104, 116]" &&
-            spotback == Color.fromARGB(255, 255, 0, 0)) {
-          setState(() {
-            blueback = Color.fromARGB(255, 255, 0, 0);
-            spotback = Color.fromARGB(255, 0, 4, 254);
-          });
-        } else if (value.toString() == "[100, 111, 119, 110]" &&
-            blueback == Color.fromARGB(255, 255, 0, 0)) {
-          setState(() {
-            spotback = Color.fromARGB(255, 255, 0, 0);
-            blueback = Color.fromARGB(255, 0, 4, 254);
-          });
-        }
+        print(value);
       });
     }
   }
@@ -142,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
                         ),
-                        backgroundColor: navback,
+                        backgroundColor: Color.fromARGB(255, 255, 0, 0),
                       ),
                     ),
                   ),
@@ -159,7 +108,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
                         ),
-                        backgroundColor: spotback,
                       ),
                     ),
                   ),
@@ -175,7 +123,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
                         ),
-                        backgroundColor: blueback,
                       ),
                     ),
                   ),

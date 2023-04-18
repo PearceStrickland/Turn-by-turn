@@ -207,10 +207,10 @@ class DeviceScreen extends StatelessWidget {
                       await c.read();
                     },
                     onNotificationPressed: () async {
-                      await c.write(utf8.encode("off"));
+                      //await c.write(utf8.encode("off"));
                       await c.setNotifyValue(true);
                       c.value.listen((value) {
-                        //widget.updateButtonState(true);
+                        print(value);
                       });
                       await c.read();
                     },
