@@ -13,6 +13,7 @@ import 'package:screenshot/screenshot.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_native_screenshot/flutter_native_screenshot.dart';
 import 'package:image/image.dart' as img;
+import 'dart:convert';
 
 ScreenshotController screenshotController = ScreenshotController();
 
@@ -89,9 +90,11 @@ class _TurnByTurnState extends State<TurnByTurn> {
     if (nav_data != null) {
       // Capture the image of the entire screen
       screenshotController
-          .captureFromWidget(Container(child: Text(nav_data)))
+          .captureFromWidget(Container(child: Text("test")))
           .then((Uint8List capturedImage) async {
         // Save the captured image to local storage
+        String base64Image = base64Encode(capturedImage);
+        print(base64Image);
         String fileName = 'captured_image.png'; // Set desired file name
         io.Directory appDocDir =
             await getApplicationDocumentsDirectory(); // Use dart:io.Directory

@@ -1,8 +1,14 @@
+import 'dart:convert';
+import 'dart:io' as io;
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:mapbox_turn_by_turn/helpers/mapbox_handler.dart';
 import 'package:mapbox_turn_by_turn/helpers/shared_prefs.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:screenshot/screenshot.dart';
 
 import '../helpers/commons.dart';
 import '../widgets/review_ride_bottom_sheet.dart';
@@ -17,6 +23,7 @@ class ReviewRide extends StatefulWidget {
 }
 
 class _ReviewRideState extends State<ReviewRide> {
+  ScreenshotController screenshotController = ScreenshotController();
   // Mapbox Maps SDK related
   final List<CameraPosition> _kTripEndPoints = [];
   late MapboxMapController controller;
@@ -41,6 +48,26 @@ class _ReviewRideState extends State<ReviewRide> {
           .add(CameraPosition(target: getTripLatLngFromSharedPrefs(type)));
     }
     super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      _captureAndSaveScreenshot();
+    });
+  }
+
+  Future<void> _captureAndSaveScreenshot() async {
+    await Future.delayed(Duration(seconds: 2));
+    Uint8List? capturedImage = await screenshotController.capture();
+    String base64Image = base64Encode(capturedImage as List<int>);
+    print(base64Image);
+    print(base64Image.length);
+    String fileName = 'wow.txt'; // Set desired file name
+    io.Directory appDocDir =
+        await getApplicationDocumentsDirectory(); // Use dart:io.Directory
+    String appDocPath = appDocDir.path;
+    String imagePath = '$appDocPath/$fileName';
+    io.File imageFile = io.File(imagePath);
+    await imageFile.writeAsString(base64Image);
+
+    print('Image saved at $imagePath');
   }
 
   _initialiseDirectionsResponse() {
@@ -97,33 +124,35 @@ class _ReviewRideState extends State<ReviewRide> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: const Icon(Icons.arrow_back)),
-        title: const Text('Review Ride'),
-      ),
-      body: SafeArea(
-        child: Stack(
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height,
-              child: MapboxMap(
-                accessToken: dotenv.env['MAPBOX_ACCESS_TOKEN'],
-                initialCameraPosition: _initialCameraPosition,
-                onMapCreated: _onMapCreated,
-                onStyleLoadedCallback: _onStyleLoadedCallback,
-                myLocationTrackingMode: MyLocationTrackingMode.TrackingGPS,
-                minMaxZoomPreference: const MinMaxZoomPreference(11, 11),
-              ),
+    return Screenshot(
+        controller: screenshotController,
+        child: Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(Icons.arrow_back)),
+            title: const Text('Review Ride'),
+          ),
+          body: SafeArea(
+            child: Stack(
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  child: MapboxMap(
+                    accessToken: dotenv.env['MAPBOX_ACCESS_TOKEN'],
+                    initialCameraPosition: _initialCameraPosition,
+                    onMapCreated: _onMapCreated,
+                    onStyleLoadedCallback: _onStyleLoadedCallback,
+                    myLocationTrackingMode: MyLocationTrackingMode.TrackingGPS,
+                    minMaxZoomPreference: const MinMaxZoomPreference(11, 11),
+                  ),
+                ),
+                reviewRideBottomSheet(context, distance, dropOffTime),
+              ],
             ),
-            reviewRideBottomSheet(context, distance, dropOffTime),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 }

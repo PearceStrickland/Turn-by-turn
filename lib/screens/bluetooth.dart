@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:mapbox_turn_by_turn/widget.dart';
 import 'package:mapbox_turn_by_turn/screens/navhome.dart';
+import 'package:mapbox_turn_by_turn/screens/homescreen.dart';
 
 var theUUID;
 var theUUID2;
@@ -14,7 +15,7 @@ var button_state;
 var theUUID3;
 
 class Bluetooth extends StatefulWidget {
-  const Bluetooth({Key? key}) : super(key: key);
+  Bluetooth({Key? key}) : super(key: key);
 
   @override
   State<Bluetooth> createState() => _BluetoothState();
@@ -182,7 +183,16 @@ class DeviceScreen extends StatelessWidget {
                 .map(
                   (c) => CharacteristicTile(
                     characteristic: c,
-                    onReadPressed: () => c.read(),
+                    onReadPressed: () {
+                      print(c);
+                      print("nice1");
+                      if (c.uuid.toString() ==
+                          "5a359055-90d5-4e7a-80e3-78740ed594d0") {
+                        theUUID3 = c;
+                        print("nice");
+                      }
+                      c.read();
+                    },
                     onWritePressed: () async {
                       if (c.uuid.toString() ==
                           "3b802c61-3308-476b-bef4-6a1ca763d842") {
@@ -192,23 +202,15 @@ class DeviceScreen extends StatelessWidget {
                           "00802c61-3308-476b-bef4-6a1ca763d842") {
                         theUUID2 = c;
                       }
-                      if (c.uuid.toString() ==
-                          "5A359055-90D5-4E7A-80E3-78740ED594D0") {
-                        theUUID3 = c;
-                        print("nice");
-                      }
 
                       await c.write(utf8.encode("on"));
                       await c.read();
                     },
                     onNotificationPressed: () async {
-                      //await c.write(utf8.encode("off"));
+                      await c.write(utf8.encode("off"));
                       await c.setNotifyValue(true);
                       c.value.listen((value) {
-                        print(value);
-                        print("yoinks");
-                        button_state = value;
-                        // do something with new value
+                        //widget.updateButtonState(true);
                       });
                       await c.read();
                     },
