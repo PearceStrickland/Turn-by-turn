@@ -84,10 +84,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> screenSender(screendata) async {
-    await theUUID.write(utf8.encode(screendata));
-  }
-
   Future<void> checker() async {
     if (widget.onCheckerCalled != null) {
       widget.onCheckerCalled!();
@@ -100,6 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
         print(value.toString());
 
         if (value.toString() == select && gv.strCurPage == "review_ride") {
+          gv.start = "start";
           gv.strCurPage = "nav";
           ScreenSend("nav");
           Navigator.push(
@@ -141,14 +138,23 @@ class _HomeScreenState extends State<HomeScreen> {
             gv.strCurPage == "pause_pause") {
           gv.strCurPage = "play_play";
           ScreenSend("play_play");
+        } else if (value.toString() == select && gv.strCurPage == "play_play") {
+          gv.strCurPage = "pause_pause";
+          ScreenSend("pause_pause");
+        } else if (value.toString() == up && gv.strCurPage == "pause_home") {
+          gv.strCurPage = "pause_pause";
+          ScreenSend("pause_pause");
+        } else if (value.toString() == up && gv.strCurPage == "play_home") {
+          gv.strCurPage = "play_play";
+          ScreenSend("play_play");
         } else if (value.toString() == select && gv.strCurPage == "nav") {
           print("check");
           //screenSender("nav");
-          gv.strCurPage = "homescreen";
+          gv.strCurPage = "homescreen_nav";
           //Navigator.push(
           //context, MaterialPageRoute(builder: (_) => HomeScreen()));
-          Navigator.pop(context);
-        } else if (value.toString() == select &&
+          ScreenSend("home_nav");
+        } /*else if (value.toString() == select &&
             navback == Color.fromARGB(255, 255, 0, 0)) {
           setState(() {
             navback = Color.fromARGB(255, 0, 4, 254);
@@ -190,6 +196,7 @@ class _HomeScreenState extends State<HomeScreen> {
             blueback = Color.fromARGB(255, 0, 4, 254);
           });
         }
+        */
       });
     }
   }

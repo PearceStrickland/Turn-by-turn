@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:mapbox_turn_by_turn/screens/bluetooth.dart';
 
 Future<void> ScreenSend(String? screendata) async {
+  print(screendata);
   await ScreenUUID.write(utf8.encode(screendata!));
 }
 
@@ -14,4 +15,5 @@ class gv {
   static String strCurPage = 'homescreen_nav';
   static String start = "start";
   static int song_index = 0;
+  static int turn_index = 1;
 }

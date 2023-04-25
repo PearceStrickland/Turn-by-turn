@@ -44,6 +44,7 @@ Widget reviewRideBottomSheet(
                     onPressed: () {
                       gv.strCurPage = "nav";
                       gv.start = "start";
+                      gv.turn_index = 1;
                       ScreenSend("nav");
                       Navigator.push(
                         context,
