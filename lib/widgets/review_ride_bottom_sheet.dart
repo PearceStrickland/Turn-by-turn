@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../helpers/shared_prefs.dart';
 import '../screens/turn_by_turn.dart';
+import 'package:mapbox_turn_by_turn/screens/GlobalVariables.dart';
 
 Widget reviewRideBottomSheet(
     BuildContext context, String distance, String dropOffTime) {
@@ -40,8 +41,15 @@ Widget reviewRideBottomSheet(
                   ),
                 ),
                 ElevatedButton(
-                    onPressed: () => Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => const TurnByTurn())),
+                    onPressed: () {
+                      gv.strCurPage = "nav";
+                      gv.start = "start";
+                      ScreenSend("nav");
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const TurnByTurn()),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(20)),
                     child: Row(

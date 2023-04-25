@@ -13,6 +13,9 @@ var theUUID2;
 var count = 0;
 var button_state;
 var theUUID3;
+var TurnUUID;
+var ScreenUUID;
+var SongUUID;
 
 class Bluetooth extends StatefulWidget {
   Bluetooth({Key? key}) : super(key: key);
@@ -191,6 +194,22 @@ class DeviceScreen extends StatelessWidget {
                         theUUID3 = c;
                         print("nice");
                       }
+                      if (c.uuid.toString() ==
+                          "25ab6b2f-375e-4633-88cc-6a4eb5ebfe20") {
+                        TurnUUID = c;
+                        print("turn");
+                      }
+                      if (c.uuid.toString() ==
+                          "37b753ef-9c74-48b0-a835-6c48c5ebf6bd") {
+                        ScreenUUID = c;
+                        print("screen");
+                      }
+                      if (c.uuid.toString() ==
+                          "d69c1f38-a397-41a1-b90b-bdfad9f106a0") {
+                        SongUUID = c;
+                        print("song");
+                      }
+
                       c.read();
                     },
                     onWritePressed: () async {

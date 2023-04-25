@@ -12,6 +12,7 @@ import 'package:screenshot/screenshot.dart';
 
 import '../helpers/commons.dart';
 import '../widgets/review_ride_bottom_sheet.dart';
+import 'GlobalVariables.dart';
 
 class ReviewRide extends StatefulWidget {
   final Map modifiedResponse;
@@ -49,7 +50,7 @@ class _ReviewRideState extends State<ReviewRide> {
     }
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      _captureAndSaveScreenshot();
+      //_captureAndSaveScreenshot();
     });
   }
 

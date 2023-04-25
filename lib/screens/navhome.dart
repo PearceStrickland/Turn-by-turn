@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
@@ -5,6 +8,10 @@ import 'package:mapbox_turn_by_turn/helpers/shared_prefs.dart';
 import 'package:mapbox_turn_by_turn/screens/prepare_ride.dart';
 import 'package:mapbox_turn_by_turn/screens/bluetooth.dart';
 import 'package:mapbox_turn_by_turn/screens/homescreen.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io' as io;
+
+import 'package:screenshot/screenshot.dart';
 
 var button;
 
@@ -15,6 +22,7 @@ class NavHome extends StatefulWidget {
 }
 
 class _NavHomeState extends State<NavHome> {
+  ScreenshotController screenshotController = ScreenshotController();
   LatLng currentLocation = getCurrentLatLngFromSharedPrefs();
   late String currentAddress;
   late CameraPosition _initialCameraPosition;
@@ -35,7 +43,8 @@ class _NavHomeState extends State<NavHome> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // Code to run after everything is loaded goes here
       // For example, you can call a function or fetch data here
-      checker();
+      //_captureAndSaveScreenshot();
+      //checker();
       // Example:
     });
   }
@@ -56,68 +65,77 @@ class _NavHomeState extends State<NavHome> {
     }
   }
 
-  void handleCheckerCalled() {
-    // Your code logic when checker is called from HomeScreen
-    print("Checker called from NavHome!");
+  Future<void> _captureAndSaveScreenshot() async {
+    Uint8List? capturedImage = await screenshotController.capture();
+    String base64Image = base64Encode(capturedImage as List<int>);
+    print(base64Image);
+    String fileName = 'yay.txt'; // Set desired file name
+    io.Directory appDocDir =
+        await getApplicationDocumentsDirectory(); // Use dart:io.Directory
+    String appDocPath = appDocDir.path;
+    String imagePath = '$appDocPath/$fileName';
+    io.File imageFile = io.File(imagePath);
+    await imageFile.writeAsString(base64Image);
+
+    print('Image saved at $imagePath');
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          HomeScreen(
-            onCheckerCalled: handleCheckerCalled,
-          ),
-          MapboxMap(
-            accessToken: dotenv.env['MAPBOX_ACCESS_TOKEN'],
-            initialCameraPosition: _initialCameraPosition,
-            myLocationEnabled: true,
-          ),
-          Positioned(
-            bottom: 0,
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: Card(
-                clipBehavior: Clip.antiAlias,
-                child: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text(
-                        'Hi there!',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+    return Screenshot(
+        controller: screenshotController,
+        child: Scaffold(
+          body: Stack(
+            children: [
+              MapboxMap(
+                accessToken: dotenv.env['MAPBOX_ACCESS_TOKEN'],
+                initialCameraPosition: _initialCameraPosition,
+                myLocationEnabled: true,
+              ),
+              Positioned(
+                bottom: 0,
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Card(
+                    clipBehavior: Clip.antiAlias,
+                    child: Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text(
+                            'Hi there!',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 20),
+                          const Text('You are currently here:'),
+                          const Text('Atlanta, Georgia',
+                              style: TextStyle(color: Colors.indigo)),
+                          const SizedBox(height: 20),
+                          ElevatedButton(
+                            onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const PrepareRide())),
+                            style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.all(20)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Text('Where do you wanna go today?'),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 20),
-                      const Text('You are currently here:'),
-                      const Text('Atlanta, Georgia',
-                          style: TextStyle(color: Colors.indigo)),
-                      const SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => const PrepareRide())),
-                        style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.all(20)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Text('Where do you wanna go today?'),
-                          ],
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 }

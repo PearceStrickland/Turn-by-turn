@@ -4,11 +4,13 @@ import 'package:mapbox_gl/mapbox_gl.dart';
 import '../helpers/mapbox_handler.dart';
 import '../helpers/shared_prefs.dart';
 import '../screens/review_ride.dart';
+import 'package:mapbox_turn_by_turn/screens/GlobalVariables.dart';
 
 Widget reviewRideFaButton(BuildContext context) {
   return FloatingActionButton.extended(
       icon: const Icon(Icons.local_taxi),
       onPressed: () async {
+        gv.strCurPage = "review_ride";
         LatLng sourceLatLng = getTripLatLngFromSharedPrefs('source');
         LatLng destinationLatLng = getTripLatLngFromSharedPrefs('destination');
         Map modifiedResponse =

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mapbox_navigation/library.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:mapbox_turn_by_turn/helpers/shared_prefs.dart';
+import 'package:mapbox_turn_by_turn/screens/homescreen.dart';
 import 'package:mapbox_turn_by_turn/ui/rate_ride.dart';
 import 'package:mapbox_turn_by_turn/screens/bluetooth.dart';
 import 'package:flutter_blue/flutter_blue.dart';
@@ -14,10 +15,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter_native_screenshot/flutter_native_screenshot.dart';
 import 'package:image/image.dart' as img;
 import 'dart:convert';
+import 'package:mapbox_turn_by_turn/screens/GlobalVariables.dart';
 
 ScreenshotController screenshotController = ScreenshotController();
 
-var index = 0;
 var test;
 
 class TurnByTurn extends StatefulWidget {
@@ -28,6 +29,8 @@ class TurnByTurn extends StatefulWidget {
 }
 
 class _TurnByTurnState extends State<TurnByTurn> {
+  var index = 1;
+  var initial = 0;
   // Waypoints to mark trip start and end
   LatLng source = getTripLatLngFromSharedPrefs('source');
   LatLng destination = getTripLatLngFromSharedPrefs('destination');
@@ -42,6 +45,7 @@ class _TurnByTurnState extends State<TurnByTurn> {
   late MapBoxNavigationViewController _controller;
   final bool isMultipleStop = false;
   String instruction = "";
+  String step = "";
   bool arrived = false;
   bool routeBuilt = false;
   bool isNavigating = false;
@@ -53,6 +57,7 @@ class _TurnByTurnState extends State<TurnByTurn> {
   }
 
   Future<void> initialize() async {
+    index = 1;
     if (!mounted) return;
 
     // Setup directions and options
@@ -83,35 +88,22 @@ class _TurnByTurnState extends State<TurnByTurn> {
 
   @override
   Widget build(BuildContext context) {
+    index = 1;
+    initial = 0;
     return const RateRide();
   }
 
   Future<void> checker(String? nav_data) async {
-    if (nav_data != null) {
-      // Capture the image of the entire screen
-      screenshotController
-          .captureFromWidget(Container(child: Text("test")))
-          .then((Uint8List capturedImage) async {
-        // Save the captured image to local storage
-        String base64Image = base64Encode(capturedImage);
-        print(base64Image);
-        String fileName = 'captured_image.png'; // Set desired file name
-        io.Directory appDocDir =
-            await getApplicationDocumentsDirectory(); // Use dart:io.Directory
-        String appDocPath = appDocDir.path;
-        String imagePath = '$appDocPath/$fileName';
-        io.File imageFile = io.File(imagePath);
-        await imageFile.writeAsBytes(capturedImage);
+    //if (nav_data != null) {
+    // Capture the image of the entire screen
 
-        print('Image saved at $imagePath');
-      });
-      //await theUUID.write(utf8.encode("on"));
-      //await theUUID.write(utf8.encode("off"));
-      //await theUUID2.write(utf8.encode(test));
-    }
     //await theUUID.write(utf8.encode("on"));
     //await theUUID.write(utf8.encode("off"));
     //await theUUID2.write(utf8.encode(test));
+    // }
+    //await theUUID.write(utf8.encode("on"));
+    //await theUUID.write(utf8.encode("off"));
+    await TurnUUID.write(utf8.encode(nav_data!));
   }
 
   Future<void> _onRouteEvent(e) async {
@@ -125,18 +117,29 @@ class _TurnByTurnState extends State<TurnByTurn> {
         var progressEvent = e.data as RouteProgressEvent;
         arrived = progressEvent.arrived!;
         test = progressEvent.currentLeg!.steps![index].instructions;
+        //Navigator.push(
+        //context, MaterialPageRoute(builder: (_) => HomeScreen()));
 
-        checker(progressEvent.currentLeg!.steps![index].instructions);
+        //checker(progressEvent.currentLeg!.steps![index].instructions);
 
-        print(progressEvent.currentLeg!.steps![index].instructions);
         if (progressEvent.currentStepInstruction != instruction) {
-          index++;
+          if (gv.start == "start") {
+            print(progressEvent.currentLeg!.steps![index].instructions);
+            checker(progressEvent.currentLeg!.steps![index].instructions);
+            gv.start = "end";
+            index++;
+          } else {
+            print(progressEvent.currentLeg!.steps![index + 1].instructions);
+            checker(progressEvent.currentLeg!.steps![index + 1].instructions);
+            index++;
+          }
         }
 
         if (progressEvent.currentStepInstruction != null) {
           instruction = progressEvent.currentStepInstruction!;
         }
         break;
+
       case MapBoxEvent.route_building:
       case MapBoxEvent.route_built:
         routeBuilt = true;
@@ -155,14 +158,17 @@ class _TurnByTurnState extends State<TurnByTurn> {
         } else {}
         break;
       case MapBoxEvent.navigation_finished:
+        index = 1;
+        break;
       case MapBoxEvent.navigation_cancelled:
+        print("hey");
+        index = 1;
         routeBuilt = false;
         isNavigating = false;
         break;
       default:
         break;
     }
-    //refresh UI
     setState(() {});
   }
 }
